@@ -1,10 +1,10 @@
 # install `nodejs` and `npm`
-RUN `sudo apt install -y nodejs npm`
-RUN `sudo npm install vue-basic-alert`
+- RUN `sudo apt install -y nodejs npm`
+- RUN `sudo npm install vue-basic-alert`
 # Install developers build kit for node library
-RUN `sudo apt install -y build-essential`
-RUN `cd frontend && npm install`
-RUN `cd backend && npm install`
+- RUN `sudo apt install -y build-essential`
+- RUN `cd frontend && npm install`
+- RUN `cd backend && npm install`
 # Create db schema
 `cd backend/config/database.js` and create `db` schema to your `mariadb` or `mysql db`
 # Edit Connection to db
