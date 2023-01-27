@@ -32,7 +32,7 @@ jobs:
       run: docker tag elite-restaurant-ordering-system_backend:latest public.ecr.aws/w8m9e4i1/foodapp:v1
 
     - name: Tag frontend image
-      run: docker push elite-restaurant-ordering-system_frontend:latest public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
+      run: docker tag elite-restaurant-ordering-system_frontend:latest public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
       
     # - name: Deploy to EC2
     #   run: |
