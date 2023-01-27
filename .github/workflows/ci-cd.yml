@@ -28,12 +28,19 @@ jobs:
       id: login-ecr
       run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/w8m9e4i1
     
-    - name: Tag backend image
-      run: docker tag elite-restaurant-ordering-system_backend:latest public.ecr.aws/w8m9e4i1/foodapp:v1
-
-    - name: Tag frontend image
-      run: docker tag elite-restaurant-ordering-system_frontend:latest public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
-      
-    - name: Deploy to EC2
+    - name: Tag images
       run: |
-        ssh -i ${{ secrets.SSH_KEY }} ubuntu@${{ secrets.EC2_IP }} "docker pull ${{ steps.build.outputs.image_id }} && docker-compose up -d"
+        docker tag elite-restaurant-ordering-system_backend:latest public.ecr.aws/w8m9e4i1/foodapp-backend:v1
+        docker tag elite-restaurant-ordering-system_frontend:latest public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
+    
+    - name: Push images
+      run: |
+        docker push public.ecr.aws/w8m9e4i1/foodapp-backend:v1
+        docker push public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
+
+    - name: Pull images and deploy app to server
+      run: |
+        ssh -i ${{ secrets.SSH_KEY }} ubuntu@${{ secrets.EC2_IP }} 
+        docker pull public.ecr.aws/w8m9e4i1/foodapp-backend:v1
+        docker pull public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
+        docker-compose up -d
