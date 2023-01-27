@@ -6,9 +6,9 @@
 # Build app and backend with `npm` and start project
 - RUN `cd frontend && npm install`
 - RUN `cd backend && npm install`
-# Create db schema
-`cd backend/config/database.js` and create `db` schema to your `mariadb` or `mysql db`
 # Edit Connection to db
+`cd backend/config/database.js` and create `db` schema to your `mariadb` or `mysql db`
+# Create db schema
 `cd frontend/src/resources/db_restaurant.sql`
 # Start the frontend server
 `cd front && npm run serve`
