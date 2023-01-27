@@ -38,9 +38,16 @@ jobs:
         docker push public.ecr.aws/w8m9e4i1/foodapp-backend:v1
         docker push public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
 
+    - name: Set up SSH key
+      uses: actions/ssh-auth@v0
+      with:
+        ssh-private-key: ${{ secrets.EC2_PRIVATE_KEY }}
+
+    - name: Login to EC2
+      run: ssh -A ubuntu@ec2-3-237-92-209.compute-1.amazonaws.com
+
     - name: Pull images and deploy app to server
       run: |
-        ssh -i ${{ secrets.KEY }} ubuntu@${{ secrets.EC2_IP }} 
         docker pull public.ecr.aws/w8m9e4i1/foodapp-backend:v1
         docker pull public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
         docker-compose up -d
