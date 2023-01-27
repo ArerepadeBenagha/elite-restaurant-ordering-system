@@ -1,4 +1,4 @@
-# install `nodejs` and `npm`
+# Install `nodejs` and `npm`
 - RUN `sudo apt install -y nodejs npm`
 - RUN `sudo npm install vue-basic-alert`
 # Install developers build kit for node library
