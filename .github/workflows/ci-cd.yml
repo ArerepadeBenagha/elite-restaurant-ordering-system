@@ -38,14 +38,9 @@ jobs:
         docker push public.ecr.aws/w8m9e4i1/foodapp-backend:v1
         docker push public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
 
-    - name: Login to EC2
-      uses: aws-actions/amazon-ec2-ssh-action@v1
-      with:
-        instance-id: i-0e6c308b5c9854369
-        region: us-east-1
-
-    - name: Pull images
+    - name: Pull images and deploy app to server
       run: |
+        ssh -i ${{ secrets.KEY }} ubuntu@${{ secrets.EC2_IP }} 
         docker pull public.ecr.aws/w8m9e4i1/foodapp-backend:v1
         docker pull public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
         docker-compose up -d
