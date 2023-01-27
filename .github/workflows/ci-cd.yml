@@ -34,6 +34,6 @@ jobs:
     - name: Tag frontend image
       run: docker tag elite-restaurant-ordering-system_frontend:latest public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
       
-    # - name: Deploy to EC2
-    #   run: |
-    #     ssh -i ${{ secrets.SSH_KEY }} ubuntu@${{ secrets.EC2_IP }} "docker pull ${{ steps.build.outputs.image_id }} && docker-compose up -d"
+    - name: Deploy to EC2
+      run: |
+        ssh -i ${{ secrets.SSH_KEY }} ubuntu@${{ secrets.EC2_IP }} "docker pull ${{ steps.build.outputs.image_id }} && docker-compose up -d"
