@@ -28,11 +28,11 @@ jobs:
       id: login-ecr
       run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/w8m9e4i1
     
-    - name: tag backend image
+    - name: Tag backend image
       run: docker tag elite-restaurant-ordering-system_backend:latest public.ecr.aws/w8m9e4i1/foodapp:v1
 
-    # - name: Push frontend
-    #   run: docker push elite-restaurant-ordering-system_frontend:latest
+    - name: Tag frontend image
+      run: docker push elite-restaurant-ordering-system_frontend:latest public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
       
     # - name: Deploy to EC2
     #   run: |
