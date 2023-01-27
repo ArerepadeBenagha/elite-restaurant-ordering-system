@@ -28,11 +28,11 @@ jobs:
       id: login-ecr
       run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
     
-    - name: Push frontend
-      run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1amazonaws.com/elite-restaurant-ordering-system_backend:latest
-
     - name: Push backend
-      run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1amazonaws.com/elite-restaurant-ordering-system_frontend:latest
+      run: docker push elite-restaurant-ordering-system_backend:latest
+
+    - name: Push frontend
+      run: docker push elite-restaurant-ordering-system_frontend:latest
       
     # - name: Deploy to EC2
     #   run: |
