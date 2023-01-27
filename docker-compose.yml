@@ -1,0 +1,35 @@
+version: '3'
+services:
+  frontend:
+    build: ./frontend
+    container_name: frontendcontainer
+    volumes:
+      - ./frontend:/app
+    ports:
+      - 8080:8080
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    container_name: backendcontainer
+    volumes:
+      - ./backend:/app
+    ports:
+      - 8081:8081
+    depends_on:
+      - db
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: demo
+      MYSQL_DATABASE: db_restaurant
+    ports:
+      - 3306:3306
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:
+  backend:
+  frontend:
