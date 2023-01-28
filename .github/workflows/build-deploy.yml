@@ -33,3 +33,4 @@ jobs:
 
     - name: Get service 
       run: kubectl get services
+      
