@@ -29,8 +29,7 @@ jobs:
       run: kubectl apply -f k8s/deployments.yml && kubectl apply -f k8s/services.yml
 
     - name: Get deployment 
-      run: kubectl get deployments
+      run: kubectl get deployments -n food-app-ns
 
     - name: Get service 
-      run: kubectl get services
-      
+      run: kubectl get services -n food-app-ns
