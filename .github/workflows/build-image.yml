@@ -1,0 +1,44 @@
+name: Build frontend image
+on:
+  push:
+    branches:
+      - main
+      - feature/*
+
+    paths:
+        - .github/workflows/build-image.yml
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: |
+        cd frontend/ && docker build -f Dockerfile -t public.ecr.aws/w8m9e4i1/foodapp-frontend:v1 .
+    
+    - name: Build Docker image
+      run: |
+        cd backend/ && docker build -f Dockerfile -t public.ecr.aws/w8m9e4i1/foodapp-backend:v1 .
+
+    - name: Set Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR       
+      id: login-ecr
+      run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/w8m9e4i1
+
+    - name: Push frontend image
+      run: |
+        docker push public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
+
+    - name: Push backend image
+      run: |
+        docker push public.ecr.aws/w8m9e4i1/foodapp-backend:v1
