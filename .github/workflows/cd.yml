@@ -1,0 +1,41 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+      - feature/*
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Login to AWS
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Pull image from AWS Container Registry
+      run: |
+        aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/w8m9e4i1
+        docker pull public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
+        docker pull public.ecr.aws/w8m9e4i1/foodapp-backend:v1
+
+
+    - name: Attach IAM Role
+      run: |
+        aws iam attach-role-policy --role-name my-ec2-role --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+
+    - name: Attach role to EC2 instance
+      run: |
+        aws ec2 associate-iam-instance-profile --instance-id i-09ddf27440b187531 --iam-instance-profile Name=my-ec2-role
+
+    - name: Run image with docker-compose
+      run: |
+        docker-compose up -d
