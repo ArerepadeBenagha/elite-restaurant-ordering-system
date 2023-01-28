@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-food-app
+  namespace: food-app-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: public.ecr.aws/w8m9e4i1/foodapp-backend:v1
+        ports:
+        - containerPort: 8081
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-food-app
+  namespace: food-app-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
+        ports:
+        - containerPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-food-app
+  namespace: food-app-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:latest
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: demo
+        - name: MYSQL_DATABASE
+          value: db_restaurant
+        - name: MYSQL_USER
+          value: dbuser
+        - name: MYSQL_PASSWORD
+          value: demo
+
