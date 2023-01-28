@@ -26,8 +26,5 @@ jobs:
     #   run: kubectl create namespace food-app-ns
 
     - name: Deploy to EKS
-      run: kubectl apply -f k8s/eks-deployment.yml
-
-    - name: Create service
-      run: kubectl get deployments
+      run: kubectl apply -f k8s/deployments.yml && kubectl apply -f k8s/services.yml
 
