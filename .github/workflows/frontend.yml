@@ -16,7 +16,7 @@ jobs:
 
     - name: Build Docker image
       run: |
-        cd frontend/ && docker build -f Dockerfile -t public.ecr.aws/w8m9e4i1/foodapp-backend:v1 .
+        cd frontend/ && docker build -f Dockerfile -t public.ecr.aws/w8m9e4i1/foodapp-frontend:v1 .
 
     - name: Set Credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -29,8 +29,6 @@ jobs:
       id: login-ecr
       run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/w8m9e4i1
 
-      
-    # - name: Push Docker image
-    #   run: |
-    #     docker tag my-image:latest 1234567890.dkr.ecr.us-west-2.amazonaws.com/my-image:latest
-    #     docker push 1234567890.dkr.ecr.us-west-2.amazonaws.com/my-image:latest
+    - name: Push images
+      run: |
+        docker push public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
