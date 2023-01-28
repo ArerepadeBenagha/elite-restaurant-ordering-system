@@ -41,3 +41,5 @@ jobs:
       id: login-ecr
       run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/w8m9e4i1
 
+    - name: Create Eks cluster with eksctl command
+      run:  eksctl create cluster --name food-app-cluster --nodes 2 --node-type t3.medium --nodes-max 3 --node-ami auto --managed
