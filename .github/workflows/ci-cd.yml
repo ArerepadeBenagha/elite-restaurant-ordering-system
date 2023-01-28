@@ -38,10 +38,10 @@ jobs:
         docker push public.ecr.aws/w8m9e4i1/foodapp-backend:v1
         docker push public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
 
-    - name: Set up SSH key
-      uses: actions/ssh-auth@v0
-      with:
-        ssh-private-key: ${{ secrets.EC2_PRIVATE_KEY }}
+    # - name: Set up SSH key
+    #   uses: actions/ssh-auth@v0
+    #   with:
+    #     ssh-private-key: ${{ secrets.EC2_PRIVATE_KEY }}
 
     - name: Install SSH key
       uses: shimataro/ssh-key-action@v2
