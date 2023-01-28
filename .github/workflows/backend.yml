@@ -1,11 +1,12 @@
-name: Build and Deploy Docker Image
-
+name: BBuild backend image
 on:
   push:
     branches:
       - main
       - feature/*
-
+      
+    paths:
+        - .github/workflows/backend.yml
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
