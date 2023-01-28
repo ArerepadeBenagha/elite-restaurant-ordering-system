@@ -52,7 +52,7 @@ jobs:
         if_key_exists: fail # replace / ignore / fail; optional (defaults to fail)
 
     - name: Login to EC2
-      run: ssh -i ${{ secrets.SSH_KEY }} ubuntu@ec2-3-237-92-209.compute-1.amazonaws.com
+      run: ssh -A ubuntu@ec2-3-237-92-209.compute-1.amazonaws.com
 
     # - name: Pull images and deploy app to server
     #   run: |
