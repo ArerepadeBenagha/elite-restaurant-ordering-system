@@ -1,35 +1,87 @@
-name: Deploy to EC2
+# name: Deploy to EC2
 
-on:
-  push:
-    branches:
-      - master
+# on:
+#   push:
+#     branches:
+#       - main
+#       - feature/*
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v2
 
-    - name: Build Docker Compose
-      run: docker-compose build
+#     # - name: Build Docker Compose
+#     #   run: docker-compose build
 
-    - name: Deploy to EC2
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
+#     - name: Set Credentials
+#       uses: aws-actions/configure-aws-credentials@v1
+#       with:
+#         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         aws-region: us-east-1
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.public.ecr.aws/w8m9e4i1/foodapp
+#     # - name: Login to Amazon ECR
+#     #   id: login-ecr
+#     #   run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/w8m9e4i1
+    
+#     # - name: Tag images
+#     #   run: |
+#     #     docker tag elite-restaurant-ordering-system_backend:latest public.ecr.aws/w8m9e4i1/foodapp-backend:v1
+#     #     docker tag elite-restaurant-ordering-system_frontend:latest public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
+    
+#     # - name: Push images
+#     #   run: |
+#     #     docker push public.ecr.aws/w8m9e4i1/foodapp-backend:v1
+#     #     docker push public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
 
-    - name: Push Docker Image
-      run: docker push ${{ secrets.AWS_ACCOUNT_ID }}.public.ecr.aws/w8m9e4i1/foodapp:v1
-      
-    - name: Deploy to EC2
-      run: |
-        ssh -i ${{ secrets.SSH_KEY }} ubuntu@${{ secrets.EC2_IP }} "docker pull ${{ steps.build.outputs.image_id }} && docker-compose up -d"
+#     # - name: Set up SSH key
+#     #   uses: actions/ssh-auth@v0
+#     #   with:
+#     #     ssh-private-key: ${{ secrets.EC2_PRIVATE_KEY }}
+
+#     - name: Install SSH key
+#       uses: shimataro/ssh-key-action@v2
+#       with:
+#         key: ${{ secrets.SSH_KEY }}
+#         name: id_rsa # optional
+#         known_hosts: ${{ secrets.KNOWN_HOSTS }}
+#         if_key_exists: fail # replace / ignore / fail; optional (defaults to fail)
+
+#     # - name: Login to EC2
+#     #   run: ssh -i /home/runner/.ssh/id_rsa ubuntu@ec2-3-237-92-209.compute-1.amazonaws.com
+
+#     # - name: Pull images and deploy app to server
+#     #   run: |
+#     #     docker pull public.ecr.aws/w8m9e4i1/foodapp-backend:v1
+#     #     docker pull public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
+#     #     docker-compose up -d
+
+# # name: Deploy to AWS EC2
+
+# # on:
+# #   push:
+# #     branches:
+# #       - master
+
+# # jobs:
+# #   deploy:
+# #     runs-on: ubuntu-latest
+
+# #     steps:
+# #     - name: Checkout repository
+# #       uses: actions/checkout@v2
+
+# #     - name: Configure AWS credentials
+# #       uses: aws-actions/configure-aws-credentials@v1
+# #       with:
+# #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+# #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+# #         aws-region: us-east-1
+
+# #     - name: Run docker-compose on remote server
+# #       run: |
+# #         ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@${EC2_IP} 'docker-compose -f /path/to/docker-compose.yml up -d'
