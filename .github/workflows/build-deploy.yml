@@ -22,9 +22,14 @@ jobs:
     - name: Update config
       run: aws eks --region us-east-1 update-kubeconfig --name food-app-cluster
 
-    # - name: Create namespace
-    #   run: kubectl create namespace food-app-ns
+    - name: Create namespace
+      run: kubectl create namespace food-app-ns
 
     - name: Deploy to EKS
       run: kubectl apply -f k8s/deployments.yml && kubectl apply -f k8s/services.yml
 
+    - name: Get deployment 
+      run: kubectl get deployments
+
+    - name: Get service 
+      run: kubectl get services

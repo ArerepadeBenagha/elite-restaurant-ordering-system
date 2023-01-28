@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend-food-app-service
+  namespace: food-app-ns
 spec:
   selector: 
     app: frontend
@@ -17,6 +18,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-food-app-service
+  namespace: food-app-ns
 spec:
   selector: 
     app: backend

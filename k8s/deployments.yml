@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend-food-app
+  namespace: food-app-ns
 spec:
   replicas: 1
   selector:
@@ -23,6 +24,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend-food-app
+  namespace: food-app-ns
 spec:
   replicas: 1
   selector:
@@ -44,6 +46,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: db-food-app
+  namespace: food-app-ns
 spec:
   replicas: 1
   selector:
