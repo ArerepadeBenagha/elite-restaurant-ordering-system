@@ -37,6 +37,7 @@ jobs:
         curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
         sudo mv /tmp/eksctl /usr/local/bin
     
-    - name: Configure kubeconfig
-      run: |
-        aws eks update-kubeconfig --name food-app-cluster
+    - name: Login to Amazon ECR       
+      id: login-ecr
+      run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/w8m9e4i1
+
