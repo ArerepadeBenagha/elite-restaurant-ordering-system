@@ -30,12 +30,14 @@ jobs:
 
     - name: Attach IAM Role
       run: |
-        aws iam attach-role-policy --role-name cdrole --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        aws iam create-role --role-name approle
+        aws iam attach-role-policy --role-name approle --policy-arn arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
 
     - name: Attach role to EC2 instance
       run: |
-        aws iam create-instance-profile --instance-profile-name cdrole
-        aws iam add-role-to-instance-profile --role-name cdrole --instance-profile-name cdrole
+        aws iam create-instance-profile --instance-profile-name approle
+        aws iam add-role-to-instance-profile --role-name approle --instance-profile-name approle
+        aws ec2 associate-iam-instance-profile --instance-id i-09ddf27440b187531 --iam-instance-profile Name=approle
 
     - name: Run image with docker-compose
       run: |
