@@ -4,9 +4,6 @@ on:
     branches:
       - feature/*
 
-    paths:
-        - .github/workflows/build-deploy.yml
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -21,7 +18,7 @@ jobs:
 
     - name: Destroy services
       run: |
-        aws eks delete-cluster --name foodrestaurantapp
+        aws eks delete-cluster --name restaurant-app
         aws ecr delete-repository --repository-name foodapp-frontend --force
         aws ecr delete-repository --repository-name foodapp-backend --force
 
