@@ -19,6 +19,7 @@ jobs:
     - name: Destroy services
       run: |
         aws eks delete-cluster --name restaurant-app
+        eksctl delete nodegroup --cluster=restaurant-app --name=ng-1efaa482
         aws ecr delete-repository --repository-name foodapp-frontend --force
         aws ecr delete-repository --repository-name foodapp-backend --force
 
