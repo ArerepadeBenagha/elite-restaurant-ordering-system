@@ -55,7 +55,7 @@ jobs:
       run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/w8m9e4i1
 
     - name: Create Eks cluster with eksctl command
-      run:  eksctl create cluster --name FoodAppCluster --nodes 2 --node-type t3.medium --nodes-max 3
+      run:  eksctl create cluster --name food-restaurant-app --nodes 2 --node-type t3.medium --nodes-max 3
 
     - name: Push images
       run: |
@@ -63,7 +63,7 @@ jobs:
         docker push public.ecr.aws/w8m9e4i1/foodapp-backend:v1
   
     - name: Update config
-      run: aws eks --region us-east-1 update-kubeconfig --name food-app-cluster
+      run: aws eks --region us-east-1 update-kubeconfig --name food-restaurant-app
 
     - name: Create namespace
       run: kubectl create namespace food-app-ns
