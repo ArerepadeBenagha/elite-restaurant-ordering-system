@@ -1,4 +1,4 @@
-name: Build frontend image
+name: Build Restaurant Application
 on:
   push:
     branches:
@@ -19,6 +19,19 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
+    - name: Install and configure kubectl
+      run: |
+        curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.23.7/2022-06-29/bin/linux/amd64/kubectl
+        curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.23.7/2022-06-29/bin/linux/arm64/kubectl
+        chmod +x ./kubectl
+        mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+        echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
+
+    - name: Install and configure eksctl
+      run: |
+        curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+        sudo mv /tmp/eksctl /usr/local/bin
+
     - name: Checkout code
       uses: actions/checkout@v2
 
@@ -34,8 +47,8 @@ jobs:
 
     - name: Create ECR repository
       run: |
-        aws ecr create-repository --repository-name foodapp-frontend
-        aws ecr create-repository --repository-name foodapp-backend
+        aws ecr create-repository --repository-name foodapp-frontend --visibility public
+        aws ecr create-repository --repository-name foodapp-backend --visibility public
 
     - name: Login to Amazon ECR       
       id: login-ecr
