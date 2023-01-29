@@ -32,64 +32,52 @@ jobs:
         curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
         sudo mv /tmp/eksctl /usr/local/bin
 
-    # - name: Checkout code
-    #   uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    # - name: Build backend Docker image
-    #   run: |
-    #     cd backend/
-    #     docker build -f Dockerfile -t public.ecr.aws/w8m9e4i1/foodapp-backend:v1 .
+    - name: Build backend Docker image
+      run: |
+        cd backend/
+        docker build -f Dockerfile -t public.ecr.aws/w8m9e4i1/foodapp-backend:v1 .
 
-    # - name: Build frontend Docker image
-    #   run: |
-    #     cd frontend/
-    #     docker build -f Dockerfile -t public.ecr.aws/w8m9e4i1/foodapp-frontend:v1 .
+    - name: Build frontend Docker image
+      run: |
+        cd frontend/
+        docker build -f Dockerfile -t public.ecr.aws/w8m9e4i1/foodapp-frontend:v1 .
 
     # - name: Create ECR repository
     #   run: |
     #     aws ecr create-repository --repository-name foodapp-frontend --image-scanning-configuration scanOnPush=true --public
     #     aws ecr create-repository --repository-name foodapp-backend --image-scanning-configuration scanOnPush=true --public
 
-    # - name: Login to Amazon ECR       
-    #   id: login-ecr
-    #   run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/w8m9e4i1
+    - name: Login to Amazon ECR       
+      id: login-ecr
+      run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/w8m9e4i1
 
-    # - name: Create Eks cluster with eksctl command
-    #   run:  eksctl create cluster --name foodrestaurantapp --nodes 2 --node-type t3.medium --nodes-max 3
+    - name: Create Eks cluster with eksctl command
+      run:  eksctl create cluster --name restaurant-app --nodes 2 --node-type t3.medium --nodes-max 3
 
-    # - name: Push images
-    #   run: |
-    #     docker push public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
-    #     docker push public.ecr.aws/w8m9e4i1/foodapp-backend:v1
+    - name: Push images
+      run: |
+        docker push public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
+        docker push public.ecr.aws/w8m9e4i1/foodapp-backend:v1
   
-    # - name: Update config
-    #   run: aws eks --region us-east-1 update-kubeconfig --name foodrestaurantapp
+    - name: Update config
+      run: aws eks --region us-east-1 update-kubeconfig --name restaurant-app
 
-    # - name: Create namespace
-    #   run: kubectl create namespace food-app-ns
+    - name: Create namespace
+      run: kubectl create namespace food-app-ns
 
-    # - name: Deploy to EKS
-    #   run: |
-    #     kubectl apply -f k8s/deployments.yml
-    #     kubectl apply -f k8s/services.yml
-
-    # - name: sleep for 60s
-    #   run: sleep 60
-
-    # - name: Get deployment 
-    #   run: kubectl get deployments -n food-app-ns
-
-    # - name: Get service 
-    #   run: kubectl get services -n food-app-ns
-
-    - name: Destroy services
+    - name: Deploy to EKS
       run: |
-        aws eks delete-cluster --name foodrestaurantapp
-        aws ecr delete-repository --repository-name foodapp-frontend --force
-        aws ecr delete-repository --repository-name foodapp-backend --force
+        kubectl apply -f k8s/deployments.yml
+        kubectl apply -f k8s/services.yml
 
-    - name: Destroy containers
-      run: |
-        kubectl delete service -n food-app-ns
-        kubectl delete deployment -n food-app-ns
-        kubectl delete ns food-app-ns
+    - name: sleep for 60s
+      run: sleep 60
+
+    - name: Get deployment 
+      run: kubectl get deployments -n food-app-ns
+
+    - name: Get service 
+      run: kubectl get services -n food-app-ns
