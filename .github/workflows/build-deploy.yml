@@ -1,24 +1,49 @@
-name: Deploy to EKS
-
+name: Build frontend image
 on:
   push:
     branches:
-      - main
       - feature/*
 
+    paths:
+        - .github/workflows/build-deploy.yml
+
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Configure AWS credentials
+
+    - name: Set Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
+    - name: Build Docker images
+      run: |
+        cd frontend/ && docker build -f Dockerfile -t public.ecr.aws/w8m9e4i1/foodapp-frontend:v1 .
+        cd backend/ && docker build -f Dockerfile -t public.ecr.aws/w8m9e4i1/foodapp-backend:v1 .
+
+    - name: Create ECR repository
+      run: |
+        aws ecr create-repository --repository-name foodapp-frontend
+        aws ecr create-repository --repository-name foodapp-backend
+
+    - name: Login to Amazon ECR       
+      id: login-ecr
+      run: aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/w8m9e4i1
+
+    - name: Create Eks cluster with eksctl command
+      run:  eksctl create cluster --name food-app-cluster --nodes 2 --node-type t3.medium --nodes-max 3
+
+    - name: Push images
+      run: |
+        docker push public.ecr.aws/w8m9e4i1/foodapp-frontend:v1
+        docker push public.ecr.aws/w8m9e4i1/foodapp-backend:v1
+  
     - name: Update config
       run: aws eks --region us-east-1 update-kubeconfig --name food-app-cluster
 
@@ -26,7 +51,9 @@ jobs:
       run: kubectl create namespace food-app-ns
 
     - name: Deploy to EKS
-      run: kubectl apply -f k8s/deployments.yml && kubectl apply -f k8s/services.yml
+      run: |
+        kubectl apply -f k8s/deployments.yml
+        kubectl apply -f k8s/services.yml
 
     - name: sleep for 60s
       run: sleep 60
