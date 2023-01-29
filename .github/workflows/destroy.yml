@@ -28,10 +28,10 @@ jobs:
       run: |
         curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
         sudo mv /tmp/eksctl /usr/local/bin
-        
+
     - name: Destroy services
       run: |
-        eksctl delete nodegroup --cluster=restaurant-app --name=ng-1efaa482
+        eksctl delete nodegroup --name ng-1efaa482 --cluster restaurant-app --delete-instance-groups
         aws eks delete-cluster --name restaurant-app
         aws ecr delete-repository --repository-name foodapp-frontend --force
         aws ecr delete-repository --repository-name foodapp-backend --force
