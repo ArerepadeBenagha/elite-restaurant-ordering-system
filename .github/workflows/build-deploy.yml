@@ -22,10 +22,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Build Docker images
+    - name: Build backend Docker image
       run: |
-        cd frontend/ && docker build -f Dockerfile -t public.ecr.aws/w8m9e4i1/foodapp-frontend:v1 .
-        cd backend/ && docker build -f Dockerfile -t public.ecr.aws/w8m9e4i1/foodapp-backend:v1 .
+        cd backend/
+        docker build -f Dockerfile -t public.ecr.aws/w8m9e4i1/foodapp-backend:v1 .
+
+    - name: Build frontend Docker image
+      run: |
+        cd frontend/
+        docker build -f Dockerfile -t public.ecr.aws/w8m9e4i1/foodapp-frontend:v1 .
 
     - name: Create ECR repository
       run: |
