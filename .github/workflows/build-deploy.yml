@@ -45,10 +45,10 @@ jobs:
         cd frontend/
         docker build -f Dockerfile -t public.ecr.aws/w8m9e4i1/foodapp-frontend:v1 .
 
-    - name: Create ECR repository
-      run: |
-        aws ecr create-repository --repository-name foodapp-frontend --image-scanning-configuration scanOnPush=true --public
-        aws ecr create-repository --repository-name foodapp-backend --image-scanning-configuration scanOnPush=true --public
+    # - name: Create ECR repository
+    #   run: |
+    #     aws ecr create-repository --repository-name foodapp-frontend --image-scanning-configuration scanOnPush=true --public
+    #     aws ecr create-repository --repository-name foodapp-backend --image-scanning-configuration scanOnPush=true --public
 
     - name: Login to Amazon ECR       
       id: login-ecr
